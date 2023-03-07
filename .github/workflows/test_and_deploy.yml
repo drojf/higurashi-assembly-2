@@ -23,6 +23,10 @@ jobs:
     name: Build DLL
     runs-on: ubuntu-latest
 
+    # Need write permissions to create release
+    permissions:
+      contents: write
+
     steps:
       - name: Checkout the repository
         uses: actions/checkout@v3

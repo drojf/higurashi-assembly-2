@@ -1,0 +1,57 @@
+name: Test and Deploy
+
+# Run this workflow on every push or pull request
+on:
+  push:
+  pull_request:
+  # workflow_dispatch:
+  #   inputs:
+  #     tag_name:
+  #       description: 'Tag name for release'
+  #       required: true
+
+# Uncomment to run this workflow only when a tag is pushed
+# Can set custom wildcards instead of '*', like 'v*' for tags starting with v
+# NOTE: Releases are only published on tags, see "Release" step below
+#on:
+#  push:
+#    tags:
+#      - '*'
+
+jobs:
+  build_dll:
+    name: Build DLL
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout the repository
+        uses: actions/checkout@v3
+
+      - name: Run Build Script
+        run: python build.py
+
+      # - name: Check out the correct branch
+      #   run: git checkout rei-mod
+
+      # # Note: This uses the mono bundled with Ubuntu to build the project
+      # - name: Compile project
+      #   run: msbuild /p:Configuration=Release
+
+      # - name: Upload DLL as Artifact
+      #   uses: actions/upload-artifact@v3
+      #   with:
+      #     name: higurashi-dll
+      #     path: ./higurashi-assembly/bin/Release/Assembly-CSharp.dll
+      #     if-no-files-found: error
+
+      # Publish a release (tagged commits)
+      # For more info on options see: https://github.com/softprops/action-gh-release
+      - name: Release (tag)
+        uses: softprops/action-gh-release@v1
+        if: startsWith(github.ref, 'refs/tags/') # only publish tagged commits
+        with:
+          files: |
+            output-dlls/*.dll
+          draft: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

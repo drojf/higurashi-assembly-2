@@ -101,9 +101,16 @@ namespace Assets.Scripts.UI.TitleScreen
 		{
 			button = GetComponent<UIButton>();
 			hoverSprite = button.hoverSprite;
-			pressedSprite = button.pressedSprite;
-			button.hoverSprite = button.normalSprite;
-			button.pressedSprite = button.normalSprite;
+			//pressedSprite = button.pressedSprite;
+
+			button.hoverSprite = hoverSprite;
+			button.pressedSprite = hoverSprite;
+			button.disabledSprite = hoverSprite;
+
+			GetComponent<UISprite>().spriteName = hoverSprite;
+
+			button.hover.a = 0.5f;
+
 			button.enabled = false;
 		}
 
@@ -116,13 +123,9 @@ namespace Assets.Scripts.UI.TitleScreen
 				{
 					button.enabled = true;
 				}
-				button.hoverSprite = hoverSprite;
-				button.pressedSprite = pressedSprite;
+				//button.hoverSprite = hoverSprite;
+				//button.pressedSprite = hoverSprite;
 				isReady = true;
-				if (isHover)
-				{
-					GetComponent<UISprite>().spriteName = button.hoverSprite;
-				}
 			}
 		}
 	}
